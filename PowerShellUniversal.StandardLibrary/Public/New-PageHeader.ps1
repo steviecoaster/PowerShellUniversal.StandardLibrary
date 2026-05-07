@@ -45,7 +45,7 @@ function New-PageHeader {
         title row. Use this for status badges, timestamps, or key/value chips.
 
     .PARAMETER Style
-        Optional hashtable of CSS styles applied to the outermost container stack.
+        Optional hashtable of CSS styles applied to the outer New-UDElement wrapper.
         Use this to control padding, margin, background, or border on the header block.
 
     .EXAMPLE
