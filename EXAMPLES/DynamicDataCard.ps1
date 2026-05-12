@@ -5,4 +5,4 @@ $newDataCardSplat = @{
     Style = @{ borderLeft = '4px solid #1976d2'; borderRadius = '8px' }
 }
 
-New-DataCard @newDataCardSplat 
+New-UDDataCard @newDataCardSplat 

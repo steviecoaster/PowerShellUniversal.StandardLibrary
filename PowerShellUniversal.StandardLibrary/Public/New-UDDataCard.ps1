@@ -1,4 +1,4 @@
-function New-DataCard {
+function New-UDDataCard {
     <#
     .SYNOPSIS
         Creates a metric or status card component for use in PowerShell Universal dashboards.
@@ -41,17 +41,17 @@ function New-DataCard {
         When omitted the card does not auto-refresh.
 
     .EXAMPLE
-        New-DataCard -Title 'Active Users' -Value { (Get-Process).Count } -RefreshInterval 30 -Style @{ borderLeft = '4px solid #1976d2'; borderRadius = '8px' }
+        New-UDDataCard -Title 'Active Users' -Value { (Get-Process).Count } -RefreshInterval 30 -Style @{ borderLeft = '4px solid #1976d2'; borderRadius = '8px' }
 
         Displays a process-count metric card with a blue left accent bar, auto-refreshing every 30 seconds.
 
     .EXAMPLE
-        New-DataCard -Title 'Service Status' -Value { 'Healthy' } -ValueColor 'green' -Subtitle 'All systems operational'
+        New-UDDataCard -Title 'Service Status' -Value { 'Healthy' } -ValueColor 'green' -Subtitle 'All systems operational'
 
         Displays a status card with a green value and a static descriptive subtitle.
 
     .EXAMPLE
-        New-DataCard -Id 'backup-card' -Title 'Last Backup' -Value { Get-LatestBackupDate }
+        New-UDDataCard -Id 'backup-card' -Title 'Last Backup' -Value { Get-LatestBackupDate }
         Sync-UDElement -Id 'backup-card'
 
         Renders a card that can be manually refreshed by calling Sync-UDElement with its Id.
