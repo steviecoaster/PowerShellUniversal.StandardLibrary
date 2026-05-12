@@ -1,4 +1,4 @@
-function New-PageHeader {
+function New-UDPageHeader {
     <#
     .SYNOPSIS
         Creates a structured page header component for use in PowerShell Universal dashboards.
@@ -49,12 +49,12 @@ function New-PageHeader {
         Use this to control padding, margin, background, or border on the header block.
 
     .EXAMPLE
-        New-PageHeader -Title 'Server Inventory'
+        New-UDPageHeader -Title 'Server Inventory'
 
         Renders a minimal header with only a title.
 
     .EXAMPLE
-        New-PageHeader -Title 'Server Inventory' -Subtitle 'All registered hosts' -Icon 'server' -Breadcrumb @(
+        New-UDPageHeader -Title 'Server Inventory' -Subtitle 'All registered hosts' -Icon 'server' -Breadcrumb @(
             @{ Label = 'Home';           Url = '/home' }
             @{ Label = 'Infrastructure'; Url = '/infrastructure' }
             'Servers'
@@ -74,7 +74,7 @@ function New-PageHeader {
             Metadata    = { New-UDChip -Label '12 Active' }
             Style       = @{ padding = '16px'; marginBottom = '24px' }
         }
-        New-PageHeader @newPageHeaderSplat
+        New-UDPageHeader @newPageHeaderSplat
 
         Renders a fully populated header with all optional regions and custom spacing.
     #>

@@ -25,7 +25,7 @@ New-UDApp -Title 'Process Dashboard' -Content {
         Style       = @{ padding = '16px'; marginBottom = '24px' }
     }
 
-    New-PageHeader @newPageHeaderSplat
+    New-UDPageHeader @newPageHeaderSplat
 
     New-UDStack -Direction row -Spacing 2 -Content {
 
@@ -61,9 +61,9 @@ New-UDApp -Title 'Process Dashboard' -Content {
             Style           = @{ borderLeft = '4px solid #2e7d32'; borderRadius = '8px'; flex = '1' }
         }
 
-        New-DataCard @processCountSplat
-        New-DataCard @cpuUsageSplat
-        New-DataCard @memoryUsageSplat
+        New-UDDataCard @processCountSplat
+        New-UDDataCard @cpuUsageSplat
+        New-UDDataCard @memoryUsageSplat
     }
 
     $processTableSplat = @{
@@ -87,5 +87,5 @@ New-UDApp -Title 'Process Dashboard' -Content {
         }
     }
 
-    New-DynamicTable @processTableSplat
+    New-UDDynamicTable @processTableSplat
 }

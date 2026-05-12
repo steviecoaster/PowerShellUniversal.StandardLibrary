@@ -203,6 +203,12 @@ Describe 'Public Function: <FunctionName>' -ForEach $FunctionTestCases {
                 Should -Match '^[A-Z][a-zA-Z]+-[A-Z][a-zA-Z]+$' -Because 'PowerShell naming convention requires PascalCase Verb-Noun with one hyphen'
         }
 
+        It 'noun should be prefixed with UD' {
+            $noun = ($FunctionName -split '-', 2)[1]
+            $noun |
+                Should -Match '^UD[A-Z]' -Because 'all module nouns must start with UD to align with PSU nomenclature.'
+        }
+
         It 'every parameter should declare an explicit type constraint' {
             $untypedParams = $script:Parameters | Where-Object {
                 $typeConstraints = $_.Attributes |

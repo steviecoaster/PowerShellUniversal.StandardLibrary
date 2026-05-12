@@ -69,7 +69,7 @@ Description = 'A UI toolkit for repeatable PSU app patterns'
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = 'New-DataCard', 'New-DynamicTable', 'New-PageHeader'
+FunctionsToExport = 'New-UDDataCard', 'New-UDDynamicTable', 'New-UDPageHeader'
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()

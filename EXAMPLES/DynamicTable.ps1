@@ -17,6 +17,6 @@ New-UDApp -Title 'Dynamic Table Demo' -Content {
         }
     }
 
-    New-DynamicTable @newDynamicTableSplat
+    New-UDDynamicTable @newDynamicTableSplat
 
 }

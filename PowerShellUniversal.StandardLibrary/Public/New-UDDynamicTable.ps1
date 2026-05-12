@@ -1,4 +1,4 @@
-function New-DynamicTable {
+function New-UDDynamicTable {
     <#
     .SYNOPSIS
         Creates a dynamic table component for use in PowerShell Universal dashboards.
@@ -32,7 +32,7 @@ function New-DynamicTable {
         button is rendered instead.
 
     .EXAMPLE
-        New-DynamicTable -Id 'process-table' -RefreshInterval 10 -Data {
+        New-UDDynamicTable -Id 'process-table' -RefreshInterval 10 -Data {
             Get-Process | Select-Object -First 50 Name, Id, CPU, WorkingSet
         } -Columns {
             New-UDTableColumn -Property Name       -Title 'Name'        -ShowSort
@@ -48,7 +48,7 @@ function New-DynamicTable {
         Displays the top 50 processes in a table that auto-refreshes every 10 seconds.
 
     .EXAMPLE
-        New-DynamicTable -Id 'service-table' -Data {
+        New-UDDynamicTable -Id 'service-table' -Data {
             Get-Service | Select-Object Name, Status, StartType
         } -Columns {
             New-UDTableColumn -Property Name      -Title 'Name'       -ShowSort
