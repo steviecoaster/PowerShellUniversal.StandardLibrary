@@ -145,7 +145,7 @@ function Show-UDJobOutputModal {
                                                     
                 Set-UDElement -Id 'ModalJobOutput' -Content {
                     if ($Output -and $Output.Length -gt 0) {
-                        ($Output | ForEach-Object { "$_`r`n" }) -join ""
+                        ($Output | ForEach-Object -Process { "$_`r`n" }) -join ""
                     }
                     else {
                         "Waiting for job output..."
@@ -153,7 +153,7 @@ function Show-UDJobOutputModal {
                 }
             }
             catch {
-                Write-Host "Error getting job output: $($_.Exception.Message)"
+                Write-Verbose -Message "Error getting job output: $($_.Exception.Message)"
             }
                                                 
             $getPSUJobSplat = @{
@@ -177,7 +177,7 @@ function Show-UDJobOutputModal {
             [array]$FinalOutput = Get-PSUJobOutput @getPSUJobOutputSplat
             Set-UDElement -Id 'ModalJobOutput' -Content {
                 if ($FinalOutput -and $FinalOutput.Length -gt 0) {
-                    $finalText = ($FinalOutput | ForEach-Object { "$_`r`n" }) -join ""
+                    $finalText = ($FinalOutput | ForEach-Object -Process { "$_`r`n" }) -join ""
                     "$finalText`r`n`r`n--- Job $($Job.Status) ---"
                 }
                 else {
