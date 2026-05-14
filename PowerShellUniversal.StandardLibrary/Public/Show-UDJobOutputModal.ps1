@@ -107,7 +107,12 @@ function Show-UDJobOutputModal {
 
     end {
 
-        $psuscript = Get-PSUScript -Name $Script -TrustCertificate
+        $getPSUScriptSplat = @{
+            Name = $Script
+            TrustCertificate = $TrustCertificate.IsPresent
+        }
+
+        $psuscript = Get-PSUScript @getPSUScriptSplat
                                             
         # Start the job and monitor it in a modal
         $invokePSUScriptSplat = @{
