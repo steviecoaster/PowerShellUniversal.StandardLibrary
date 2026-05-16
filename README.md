@@ -6,6 +6,54 @@ A Standard Library of tools, utilities, and helper functions designed to streaml
 
 `PowerShellUniversal.StandardLibrary` provides a curated set of reusable PowerShell functions and components that simplify common tasks encountered when building dashboards, APIs, automations, and portals in PowerShell Universal. Instead of reinventing the wheel for every project, import this library and get started with a solid foundation of pre-built tools.
 
+## Components
+
+### `New-UDPageHeader`
+
+A structured top-of-page header block. You can include any combination of a title, subtitle, icon, breadcrumb trail, help/info alert, metadata region, and an actions area on the right-hand side — all optional. The actions and metadata slots accept any PSU components, so you can drop in buttons, dropdowns, chips, or status badges wherever they make sense.
+
+![Page Header](screenshots/page_header.png)
+
+---
+
+### `New-UDActionGroup`
+
+Wraps a set of buttons in a flex stack with consistent spacing. The direction (`row`, `column`, `row-reverse`, `column-reverse`) and gap between buttons are both configurable, and the container shrinks to fit its content by default. Give the group an `-Id` and you can target it with `Sync-UDElement` to swap out its contents dynamically.
+
+**Column layout**
+
+![Action Group – Column](screenshots/action_group-column.png)
+
+**Row layout**
+
+![Action Group – Row](screenshots/action_group-row.png)
+
+---
+
+### `New-UDDataCard`
+
+Renders a metric or status card built around a `-Value` script block. The value is evaluated inside a `New-UDDynamic` region, so it re-runs on every refresh without re-rendering the surrounding card. Supply `-RefreshInterval` to auto-refresh on a timer, or omit it and call `Sync-UDElement` against the card's `-Id` to refresh on demand. The value color and all card-level styles are fully overridable.
+
+![Dynamic Data Card](screenshots/dynamic_card.png)
+
+---
+
+### `New-UDDynamicTable`
+
+Combines `New-UDDynamic` and `New-UDTable` into a single call. Pass a `-Data` script block and a `-Columns` script block — both are re-executed on every refresh cycle. Built-in search, sorting, pagination, and a configurable page size are always enabled. Set `-RefreshInterval` for automatic polling, or leave it off and a **Refresh** button is rendered automatically.
+
+![Dynamic Table](screenshots/dynamic_table.png)
+
+---
+
+### `Show-UDJobOutputModal`
+
+Kicks off a PSU script job and opens a full-width modal that polls the job every two seconds, streaming its output into a terminal-style pane in real time. Once the job finishes a status line is appended and the modal closes on its own. Pass `-ScriptParameters` to forward arguments to the script, and use `-Style` to override any part of the output pane's appearance.
+
+![Job Output Modal](screenshots/job_monitor.png)
+
+---
+
 ## Installation
 
 ### From Within PowerShell Universal
