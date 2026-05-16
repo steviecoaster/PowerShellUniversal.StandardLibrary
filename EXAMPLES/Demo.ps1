@@ -27,6 +27,9 @@ New-UDApp -Title 'Standard Library Demo' -Content {
 
     New-UDPageHeader @newPageHeaderSplat
 
+    New-UDTypography -Text 'New-UDDataCard' -Variant 'h5' -Style @{ marginTop = '32px'; marginBottom = '8px' }
+    New-UDAlert -Severity 'info' -Text 'Renders a metric or status card built around a -Value script block. The value runs inside New-UDDynamic so it re-executes on every refresh without re-rendering the surrounding card. Set -RefreshInterval for automatic polling, or call Sync-UDElement against the card -Id to refresh on demand. Value color and all card-level styles are fully overridable.' -Style @{ marginBottom = '16px' }
+
     New-UDStack -Direction row -Spacing 2 -Content {
 
         $processCountSplat = @{
@@ -66,6 +69,9 @@ New-UDApp -Title 'Standard Library Demo' -Content {
         New-UDDataCard @memoryUsageSplat
     }
 
+    New-UDTypography -Text 'New-UDDynamicTable' -Variant 'h5' -Style @{ marginTop = '32px'; marginBottom = '8px' }
+    New-UDAlert -Severity 'info' -Text 'Combines New-UDDynamic and New-UDTable into a single call. Pass a -Data script block and a -Columns script block — both re-execute on every refresh cycle. Built-in search, sorting, pagination, and configurable page size are always enabled. Set -RefreshInterval for automatic polling, or omit it and a Refresh button is rendered automatically.' -Style @{ marginBottom = '16px' }
+
     $processTableSplat = @{
         Id              = 'process-table'
         RefreshInterval = 30
@@ -89,13 +95,15 @@ New-UDApp -Title 'Standard Library Demo' -Content {
 
     New-UDDynamicTable @processTableSplat
 
-    New-UDTypography -Text 'Job Monitor Modal' -Variant h4 -Style @{ marginBottom = '8px' }
+    New-UDTypography -Text 'Show-UDJobOutputModal' -Variant 'h5' -Style @{ marginTop = '32px'; marginBottom = '8px' }
+    New-UDAlert -Severity 'info' -Text 'Kicks off a PSU script job and opens a full-width modal that polls the job every two seconds, streaming its output into a terminal-style pane in real time. Once the job finishes, a status line is appended and the modal closes automatically. Pass -ScriptParameters to forward arguments, and use -Style to override the output pane appearance.' -Style @{ marginBottom = '16px' }
     
     New-UDButton -Text "Show Output" -OnClick { 
         Show-UDJobOutputModal -Script Monitor.ps1 -TrustCertificate
     }    
     
-    New-UDTypography -Text 'Action Group Variations' -Variant h4 -Style @{ marginBottom = '8px' }
+    New-UDTypography -Text 'New-UDActionGroup' -Variant 'h5' -Style @{ marginTop = '32px'; marginBottom = '8px' }
+    New-UDAlert -Severity 'info' -Text 'Wraps a set of buttons in a flex stack with consistent spacing. Direction (row, column, row-reverse, column-reverse) and gap are both configurable, and the container shrinks to fit its content by default. Assign an -Id and call Sync-UDElement to swap out button contents dynamically at runtime.' -Style @{ marginBottom = '16px' }
 
     # Direction selector applies to all groups
     New-UDSelect -Id 'dirSelect' -Label 'Direction' -Option {
@@ -140,5 +148,41 @@ New-UDApp -Title 'Standard Library Demo' -Content {
             New-UDButton -Text 'Rollback' -Style @{ background = '#ff9800'; color = '#fff'; fontWeight = '700' } -OnClick { Show-UDToast -Message 'Rolling back' -MessageColor '#ff9800' }
             New-UDButton -Text 'Destroy'  -Style @{ background = '#f44336'; color = '#fff'; fontWeight = '700' } -OnClick { Show-UDToast -Message '💀 Destroyed' -MessageColor red }
         )
+    }
+
+    New-UDTypography -Text 'New-UDFormTemplate' -Variant 'h5' -Style @{ marginTop = '32px'; marginBottom = '8px' }
+    New-UDAlert -Severity 'info' -Text 'Renders a fully-wired New-UDForm from a named template with pre-built fields and field-level validation in a single call. Nine templates cover common scenarios: Email, Feedback, SimpleRegistration, PasswordReset, ServiceRequest, ChangeRequest, UserOnboarding, Shipping, and Confirmation. Supply -OnSubmit, optionally -OnCancel, and everything else is handled for you. Field IDs in $EventData are stable and documented.' -Style @{ marginBottom = '16px' }
+
+    New-UDStack -Direction row -Spacing 3 -Content {
+        New-UDCard -Title 'Email / Newsletter' -Style @{ borderRadius = '6px'; border = '1px solid #e0e0e0'; boxShadow = 'none' } -Content {
+            $p = @{
+                Template      = 'Email'
+                SubmitText    = 'Subscribe'
+                ButtonVariant = 'contained'
+                OnSubmit      = { Show-UDToast -Message "Subscribed: $($EventData.txtEmail)" }
+            }
+            New-UDFormTemplate @p
+        }
+        New-UDCard -Title 'Feedback' -Style @{ borderRadius = '18px'; boxShadow = '0 8px 30px rgba(0,0,0,0.10)'; borderTop = '4px solid #1976d2' } -Content {
+            $p = @{
+                Template      = 'Feedback'
+                SubmitText    = 'Send Feedback'
+                ButtonVariant = 'contained'
+                OnSubmit      = { Show-UDToast -Message "Feedback received: $($EventData.selCategory)" }
+            }
+            New-UDFormTemplate @p
+        }
+    }
+
+    New-UDElement -Tag 'div' -Attributes @{ style = @{ width = '50%'; marginTop = '24px' } } -Content {
+        New-UDCard -Title 'Change Request' -Style @{ borderRadius = '18px'; boxShadow = '0 8px 30px rgba(0,0,0,0.10)'; borderTop = '4px solid #f57c00' } -Content {
+            $p = @{
+                Template      = 'ChangeRequest'
+                SubmitText    = 'Raise Change'
+                ButtonVariant = 'contained'
+                OnSubmit      = { Show-UDToast -Message "Change request raised: $($EventData.txtTitle)" }
+            }
+            New-UDFormTemplate @p
+        }
     }
 }

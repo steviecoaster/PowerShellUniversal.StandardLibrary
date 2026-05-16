@@ -54,6 +54,34 @@ Kicks off a PSU script job and opens a full-width modal that polls the job every
 
 ---
 
+### `New-UDFormTemplate`
+
+Renders a fully-wired `New-UDForm` from a named template, giving you pre-built input fields and field-level validation in a single call. Choose a template, provide an `-OnSubmit` handler, and optionally an `-OnCancel` — everything else is handled for you. Nine templates cover the most common data-entry scenarios:
+
+| Template | Fields |
+|---|---|
+| `Email` | First name (opt), last name (opt), email address |
+| `Feedback` | Category (select), message, email (opt) |
+| `SimpleRegistration` | First name, last name, email, password, confirm password |
+| `PasswordReset` | Username, email, reason (opt) |
+| `ServiceRequest` | Requester name, email, category, priority, description |
+| `ChangeRequest` | Title, affected system, priority, description, requested date |
+| `UserOnboarding` | First/last name, work email, department, job title, manager, start date |
+| `Shipping` | Name, address lines 1–2 (opt), city, state, ZIP, country |
+| `Confirmation` | No fields — renders a proceed/cancel prompt |
+
+The submit and cancel button labels, button variant (`contained`, `outlined`, `text`), CSS class, and an optional wrapping inline style are all independently configurable. Field IDs in `$EventData` are stable and documented so they can be referenced reliably in `-OnSubmit`.
+
+**Flat and modern card styles — pairs 1 & 2**
+
+![Form Template – pairs 1 and 2](screenshots/form-_template.png)
+
+**Remaining templates — pairs 3, 4, and 5**
+
+![Form Template – pairs 3, 4, and 5](screenshots/form_template2.png)
+
+---
+
 ## Installation
 
 ### From Within PowerShell Universal
@@ -90,15 +118,35 @@ Get-Command -Module PowerShellUniversal.StandardLibrary
 
 ## Examples
 
-The [`EXAMPLES/`](EXAMPLES/) folder contains ready-to-run scripts that demonstrate each component. Copy the contents of an example into a PowerShell Universal **App** or **Dashboard** page to see it in action.
+The [`EXAMPLES/`](EXAMPLES/) folder contains ready-to-run scripts that demonstrate each component. [Demo.ps1](EXAMPLES/Demo.ps1) is the best starting point — it covers every component on a single page with inline descriptions.
 
 | File | Description |
 |------|-------------|
+| [Demo.ps1](EXAMPLES/Demo.ps1) | Kitchen-sink demo of all components on a single page with inline component descriptions. |
 | [ActionGroup.ps1](EXAMPLES/ActionGroup.ps1) | Demonstrates `New-UDActionGroup` with four styling variations (standard, outlined, text/ghost, and custom) and a live direction selector. |
 | [DynamicDataCard.ps1](EXAMPLES/DynamicDataCard.ps1) | Shows `New-UDDataCard` rendering live metric cards with auto-refresh and manual refresh patterns. |
 | [DynamicTable.ps1](EXAMPLES/DynamicTable.ps1) | Shows `New-UDDynamicTable` with server-side data loading and row actions. |
 | [JobModal.ps1](EXAMPLES/JobModal.ps1) | Demonstrates `Show-UDJobOutputModal` for surfacing job output inside a modal dialog. |
-| [Demo.ps1](EXAMPLES/Demo.ps1) | A combined kitchen-sink demo of all components on a single page. |
+| [ContactForm.ps1](EXAMPLES/ContactForm.ps1) | Gallery of all nine `New-UDFormTemplate` templates with mixed flat and modern card styles. |
+
+### Running Demo.ps1 in PowerShell Universal
+
+1. **Install the module** (see [Installation](#installation) above) and ensure it is importable in your PSU environment.
+
+2. **Open the Apps section** in the PowerShell Universal admin portal and click **Create App**.
+
+3. **Fill in the app details:**
+   - **Name** — any display name, e.g. `Standard Library Demo`
+   - **URL** — the path the app will be served at, e.g. `/standardlibrary`
+   - Leave all other settings at their defaults and click **Create**.
+
+4. **Open the app editor.** From the Apps list, click the app you just created, then click **Edit** (or the pencil icon) to open the script editor.
+
+5. **Paste the example code.** Open [EXAMPLES/Demo.ps1](EXAMPLES/Demo.ps1) from this repository, copy its entire contents, and paste them into the editor — replacing any existing placeholder code.
+
+6. **Save and navigate** to the URL you set in step 3. The app will render immediately.
+
+> **Tip:** If any components fail to render, confirm that `PowerShellUniversal.StandardLibrary` is available in the environment assigned to your app.
 
 ## Contributing
 
