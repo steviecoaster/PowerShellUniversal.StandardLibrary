@@ -27,6 +27,40 @@ New-UDApp -Title 'Standard Library Demo' -Content {
 
     New-UDPageHeader @newPageHeaderSplat
 
+    New-UDButton -Text '</> View Code' -Variant outlined -Size small -Style @{
+        borderRadius = '999px'; fontSize = '0.75rem'; textTransform = 'none'; marginTop = '12px'
+    } -OnClick {
+        Show-UDModal -MaxWidth 'lg' -FullWidth -Header {
+            New-UDTypography -Text 'New-UDPageHeader — Sample Code' -Variant 'h6'
+        } -Content {
+            New-UDCodeEditor -Language 'powershell' -ReadOnly -Height '450px' -Code @'
+$pageHeaderSplat = @{
+    Title      = 'My Dashboard'
+    Subtitle   = 'Optional subtitle'
+    Icon       = 'microchip'
+    Breadcrumb = @(
+        @{ Label = 'Home'; Url = '/home' }
+        'Current Page'
+    )
+    HelpText   = 'Help text shown beneath the breadcrumb.'
+    Actions    = {
+        New-UDButton -Text 'Refresh' -Icon (New-UDIcon -Icon 'rotate') -OnClick {
+            Sync-UDElement -Id 'my-element'
+        }
+    }
+    Metadata   = {
+        New-UDChip -Label "Host: $env:COMPUTERNAME" -Icon (New-UDIcon -Icon 'server')
+        New-UDChip -Label "User: $env:USERNAME"     -Icon (New-UDIcon -Icon 'user')
+    }
+    Style      = @{ padding = '16px'; marginBottom = '24px' }
+}
+New-UDPageHeader @pageHeaderSplat
+'@
+        } -Footer {
+            New-UDButton -Text 'Close' -OnClick { Hide-UDModal }
+        }
+    }
+
     New-UDTypography -Text 'New-UDDataCard' -Variant 'h5' -Style @{ marginTop = '32px'; marginBottom = '8px' }
     New-UDAlert -Severity 'info' -Text 'Renders a metric or status card built around a -Value script block. The value runs inside New-UDDynamic so it re-executes on every refresh without re-rendering the surrounding card. Set -RefreshInterval for automatic polling, or call Sync-UDElement against the card -Id to refresh on demand. Value color and all card-level styles are fully overridable.' -Style @{ marginBottom = '16px' }
 
@@ -69,6 +103,39 @@ New-UDApp -Title 'Standard Library Demo' -Content {
         New-UDDataCard @memoryUsageSplat
     }
 
+    New-UDButton -Text '</> View Code' -Variant outlined -Size small -Style @{
+        borderRadius = '999px'; fontSize = '0.75rem'; textTransform = 'none'; marginTop = '12px'
+    } -OnClick {
+        Show-UDModal -MaxWidth 'lg' -FullWidth -Header {
+            New-UDTypography -Text 'New-UDDataCard — Sample Code' -Variant 'h6'
+        } -Content {
+            New-UDCodeEditor -Language 'powershell' -ReadOnly -Height '500px' -Code @'
+$processCountSplat = @{
+    Id              = 'card-process-count'
+    Title           = 'Running Processes'
+    Value           = { (Get-Process).Count }
+    RefreshInterval = 30
+    Style           = @{ borderLeft = '4px solid #1976d2'; borderRadius = '8px'; flex = '1' }
+}
+New-UDDataCard @processCountSplat
+
+$cpuUsageSplat = @{
+    Id         = 'card-cpu-usage'
+    Title      = 'Top CPU Process'
+    Value      = {
+        $top = Get-Process | Sort-Object CPU -Descending | Select-Object -First 1
+        '{0} ({1:N1}s)' -f $top.Name, $top.CPU
+    }
+    ValueColor = '#e65100'
+    Style      = @{ borderLeft = '4px solid #e65100'; borderRadius = '8px'; flex = '1' }
+}
+New-UDDataCard @cpuUsageSplat
+'@
+        } -Footer {
+            New-UDButton -Text 'Close' -OnClick { Hide-UDModal }
+        }
+    }
+
     New-UDTypography -Text 'New-UDDynamicTable' -Variant 'h5' -Style @{ marginTop = '32px'; marginBottom = '8px' }
     New-UDAlert -Severity 'info' -Text 'Combines New-UDDynamic and New-UDTable into a single call. Pass a -Data script block and a -Columns script block — both re-execute on every refresh cycle. Built-in search, sorting, pagination, and configurable page size are always enabled. Set -RefreshInterval for automatic polling, or omit it and a Refresh button is rendered automatically.' -Style @{ marginBottom = '16px' }
 
@@ -95,13 +162,75 @@ New-UDApp -Title 'Standard Library Demo' -Content {
 
     New-UDDynamicTable @processTableSplat
 
+    New-UDButton -Text '</> View Code' -Variant outlined -Size small -Style @{
+        borderRadius = '999px'; fontSize = '0.75rem'; textTransform = 'none'; marginTop = '12px'
+    } -OnClick {
+        Show-UDModal -MaxWidth 'lg' -FullWidth -Header {
+            New-UDTypography -Text 'New-UDDynamicTable — Sample Code' -Variant 'h6'
+        } -Content {
+            New-UDCodeEditor -Language 'powershell' -ReadOnly -Height '480px' -Code @'
+$processTableSplat = @{
+    Id              = 'process-table'
+    RefreshInterval = 30
+    Data            = {
+        Get-Process |
+        Sort-Object  -Property CPU -Descending |
+        Select-Object -First 50 Name, Id, CPU, WorkingSet, Handles
+    }
+    Columns         = {
+        New-UDTableColumn -Property Name       -Title 'Name'        -ShowSort
+        New-UDTableColumn -Property Id         -Title 'PID'         -ShowSort
+        New-UDTableColumn -Property CPU        -Title 'CPU (s)'     -ShowSort -Render {
+            '{0:N2}' -f [double]$EventData.CPU
+        }
+        New-UDTableColumn -Property WorkingSet -Title 'Memory (MB)' -ShowSort -Render {
+            '{0:N0}' -f ($EventData.WorkingSet / 1MB)
+        }
+        New-UDTableColumn -Property Handles    -Title 'Handles'     -ShowSort
+    }
+}
+New-UDDynamicTable @processTableSplat
+'@
+        } -Footer {
+            New-UDButton -Text 'Close' -OnClick { Hide-UDModal }
+        }
+    }
+
     New-UDTypography -Text 'Show-UDJobOutputModal' -Variant 'h5' -Style @{ marginTop = '32px'; marginBottom = '8px' }
     New-UDAlert -Severity 'info' -Text 'Kicks off a PSU script job and opens a full-width modal that polls the job every two seconds, streaming its output into a terminal-style pane in real time. Once the job finishes, a status line is appended and the modal closes automatically. Pass -ScriptParameters to forward arguments, and use -Style to override the output pane appearance.' -Style @{ marginBottom = '16px' }
     
     New-UDButton -Text "Show Output" -OnClick { 
         Show-UDJobOutputModal -Script Monitor.ps1 -TrustCertificate
-    }    
-    
+    }
+
+    New-UDButton -Text '</> View Code' -Variant outlined -Size small -Style @{
+        borderRadius = '999px'; fontSize = '0.75rem'; textTransform = 'none'; marginTop = '12px'
+    } -OnClick {
+        Show-UDModal -MaxWidth 'lg' -FullWidth -Header {
+            New-UDTypography -Text 'Show-UDJobOutputModal — Sample Code' -Variant 'h6'
+        } -Content {
+            New-UDCodeEditor -Language 'powershell' -ReadOnly -Height '400px' -Code @'
+New-UDButton -Text 'Show Output' -OnClick {
+    Show-UDJobOutputModal -Script 'Monitor.ps1' -TrustCertificate
+}
+
+# With parameters:
+$jobModalSplat = @{
+    Script           = 'Deploy-Application.ps1'
+    HeaderText       = 'Deployment Output'
+    InitMessage      = 'Starting deployment...'
+    ScriptParameters = @{ Environment = 'Production' }
+    TrustCertificate = $true
+}
+New-UDButton -Text 'Deploy' -OnClick {
+    Show-UDJobOutputModal @jobModalSplat
+}
+'@
+        } -Footer {
+            New-UDButton -Text 'Close' -OnClick { Hide-UDModal }
+        }
+    }
+
     New-UDTypography -Text 'New-UDActionGroup' -Variant 'h5' -Style @{ marginTop = '32px'; marginBottom = '8px' }
     New-UDAlert -Severity 'info' -Text 'Wraps a set of buttons in a flex stack with consistent spacing. Direction (row, column, row-reverse, column-reverse) and gap are both configurable, and the container shrinks to fit its content by default. Assign an -Id and call Sync-UDElement to swap out button contents dynamically at runtime.' -Style @{ marginBottom = '16px' }
 
@@ -150,6 +279,39 @@ New-UDApp -Title 'Standard Library Demo' -Content {
         )
     }
 
+    New-UDButton -Text '</> View Code' -Variant outlined -Size small -Style @{
+        borderRadius = '999px'; fontSize = '0.75rem'; textTransform = 'none'; marginTop = '12px'
+    } -OnClick {
+        Show-UDModal -MaxWidth 'lg' -FullWidth -Header {
+            New-UDTypography -Text 'New-UDActionGroup — Sample Code' -Variant 'h6'
+        } -Content {
+            New-UDCodeEditor -Language 'powershell' -ReadOnly -Height '540px' -Code @'
+$actionGroupSplat = @{
+    Direction = 'row'
+    Style     = @{ padding = '12px'; background = '#f5f5f5'; borderRadius = '8px' }
+    Button    = @(
+        New-UDButton -Text 'Primary'   -Variant contained -Color primary   -OnClick { Show-UDToast -Message 'Primary'   }
+        New-UDButton -Text 'Secondary' -Variant contained -Color secondary -OnClick { Show-UDToast -Message 'Secondary' }
+        New-UDButton -Text 'Error'     -Variant contained -Color error     -OnClick { Show-UDToast -Message 'Error'     }
+    )
+}
+New-UDActionGroup @actionGroupSplat
+
+# With icons (outlined):
+$actionGroupOutlinedSplat = @{
+    Direction = 'row'
+    Button    = @(
+        New-UDButton -Text 'Save'   -Variant outlined -Color primary -Icon (New-UDIcon -Icon save)  -OnClick { }
+        New-UDButton -Text 'Delete' -Variant outlined -Color error   -Icon (New-UDIcon -Icon trash) -OnClick { }
+    )
+}
+New-UDActionGroup @actionGroupOutlinedSplat
+'@
+        } -Footer {
+            New-UDButton -Text 'Close' -OnClick { Hide-UDModal }
+        }
+    }
+
     New-UDTypography -Text 'New-UDFormTemplate' -Variant 'h5' -Style @{ marginTop = '32px'; marginBottom = '8px' }
     New-UDAlert -Severity 'info' -Text 'Renders a fully-wired New-UDForm from a named template with pre-built fields and field-level validation in a single call. Nine templates cover common scenarios: Email, Feedback, SimpleRegistration, PasswordReset, ServiceRequest, ChangeRequest, UserOnboarding, Shipping, and Confirmation. Supply -OnSubmit, optionally -OnCancel, and everything else is handled for you. Field IDs in $EventData are stable and documented.' -Style @{ marginBottom = '16px' }
 
@@ -183,6 +345,38 @@ New-UDApp -Title 'Standard Library Demo' -Content {
                 OnSubmit      = { Show-UDToast -Message "Change request raised: $($EventData.txtTitle)" }
             }
             New-UDFormTemplate @p
+        }
+    }
+
+    New-UDButton -Text '</> View Code' -Variant outlined -Size small -Style @{
+        borderRadius = '999px'; fontSize = '0.75rem'; textTransform = 'none'; marginTop = '12px'
+    } -OnClick {
+        Show-UDModal -MaxWidth 'lg' -FullWidth -Header {
+            New-UDTypography -Text 'New-UDFormTemplate — Sample Code' -Variant 'h6'
+        } -Content {
+            New-UDCodeEditor -Language 'powershell' -ReadOnly -Height '480px' -Code @'
+$emailFormSplat = @{
+    Template      = 'Email'
+    SubmitText    = 'Subscribe'
+    ButtonVariant = 'contained'
+    OnSubmit      = { Show-UDToast -Message "Subscribed: $($EventData.txtEmail)" }
+}
+New-UDFormTemplate @emailFormSplat
+
+# Available templates:
+# Email, Feedback, SimpleRegistration, PasswordReset,
+# ServiceRequest, ChangeRequest, UserOnboarding, Shipping, Confirmation
+
+# With cancel handler:
+$changeRequestSplat = @{
+    Template  = 'ChangeRequest'
+    OnSubmit  = { Show-UDToast -Message 'Change raised' }
+    OnCancel  = { Hide-UDModal }
+}
+New-UDFormTemplate @changeRequestSplat
+'@
+        } -Footer {
+            New-UDButton -Text 'Close' -OnClick { Hide-UDModal }
         }
     }
 }
