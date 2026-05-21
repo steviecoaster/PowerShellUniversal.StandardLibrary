@@ -35,9 +35,9 @@ function New-UDDynamicTable {
         New-UDDynamicTable -Id 'process-table' -RefreshInterval 10 -Data {
             Get-Process | Select-Object -First 50 Name, Id, CPU, WorkingSet
         } -Columns {
-            New-UDTableColumn -Property Name       -Title 'Name'        -ShowSort
-            New-UDTableColumn -Property Id         -Title 'PID'         -ShowSort
-            New-UDTableColumn -Property CPU        -Title 'CPU (s)'     -ShowSort -Render {
+            New-UDTableColumn -Property Name -Title 'Name' -ShowSort
+            New-UDTableColumn -Property Id -Title 'PID' -ShowSort
+            New-UDTableColumn -Property CPU -Title 'CPU (s)' -ShowSort -Render {
                 '{0:N2}' -f [double]$EventData.CPU
             }
             New-UDTableColumn -Property WorkingSet -Title 'Memory (MB)' -ShowSort -Render {
@@ -51,8 +51,8 @@ function New-UDDynamicTable {
         New-UDDynamicTable -Id 'service-table' -Data {
             Get-Service | Select-Object Name, Status, StartType
         } -Columns {
-            New-UDTableColumn -Property Name      -Title 'Name'       -ShowSort
-            New-UDTableColumn -Property Status    -Title 'Status'     -ShowSort
+            New-UDTableColumn -Property Name -Title 'Name' -ShowSort
+            New-UDTableColumn -Property Status -Title 'Status' -ShowSort
             New-UDTableColumn -Property StartType -Title 'Start Type' -ShowSort
         }
 

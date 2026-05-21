@@ -35,7 +35,7 @@ function New-UDActionGroup {
 
     .EXAMPLE
         New-UDActionGroup -Button @(
-            New-UDButton -Text 'Save'   -Color primary -OnClick { Save-Data }
+            New-UDButton -Text 'Save' -Color primary -OnClick { Save-Data }
             New-UDButton -Text 'Cancel' -Color default -OnClick { Hide-UDModal }
         )
 
@@ -43,9 +43,9 @@ function New-UDActionGroup {
 
     .EXAMPLE
         New-UDActionGroup -Direction column -Style @{ padding = '16px' } -Button @(
-            New-UDButton -Text 'Deploy'   -OnClick { Start-Deployment }
+            New-UDButton -Text 'Deploy' -OnClick { Start-Deployment }
             New-UDButton -Text 'Rollback' -OnClick { Start-Rollback }
-            New-UDButton -Text 'Destroy'  -OnClick { Start-Destroy }
+            New-UDButton -Text 'Destroy' -OnClick { Start-Destroy }
         )
 
         Renders three buttons stacked vertically inside a padded container.
