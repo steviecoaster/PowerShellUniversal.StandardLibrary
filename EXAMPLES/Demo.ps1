@@ -20,7 +20,7 @@ New-UDApp -Title 'Standard Library Demo' -Content {
         }
         Metadata   = {
             New-UDChip -Label "Host: $env:COMPUTERNAME" -Icon (New-UDIcon -Icon 'server')
-            New-UDChip -Label "User: $env:USERNAME" -Icon (New-UDIcon -Icon 'user')
+            New-UDChip -Label "User: $($session.SecurityContext.Identity.Name)" -Icon (New-UDIcon -Icon 'user')
         }
         Style      = @{ padding = '16px'; marginBottom = '24px' }
     }
@@ -50,7 +50,7 @@ $pageHeaderSplat = @{
     }
     Metadata   = {
         New-UDChip -Label "Host: $env:COMPUTERNAME" -Icon (New-UDIcon -Icon 'server')
-        New-UDChip -Label "User: $env:USERNAME" -Icon (New-UDIcon -Icon 'user')
+        New-UDChip -Label "User: $($session.SecurityContext.Identity.Name)" -Icon (New-UDIcon -Icon 'user')
     }
     Style      = @{ padding = '16px'; marginBottom = '24px' }
 }
