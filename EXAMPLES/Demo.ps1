@@ -379,4 +379,74 @@ New-UDFormTemplate @changeRequestSplat
             New-UDButton -Text 'Close' -OnClick { Hide-UDModal }
         }
     }
+
+    New-UDTypography -Text 'New-UDA11yWrapper' -Variant 'h5' -Style @{ marginTop = '32px'; marginBottom = '8px' }
+    New-UDAlert -Severity 'info' -Text 'Wraps any PSU component in a New-UDElement container and applies an aria-label via the Attributes parameter. Use this when a component does not surface aria-label directly, or when you need to label a composite region (search bar, radio group, table) for screen-reader users. Inspect the rendered element in Chrome DevTools → Accessibility panel to verify the computed accessible name.' -Style @{ marginBottom = '16px' }
+
+    New-UDStack -Direction row -Spacing 3 -Content {
+        New-UDCard -Title 'Search Region' -Style @{ borderRadius = '8px'; border = '1px solid #e0e0e0'; boxShadow = 'none'; flex = '1' } -Content {
+            New-UDA11yWrapper -AriaLabel 'Site search' -Style @{ display = 'flex'; gap = '8px'; alignItems = 'center' } -Content {
+                New-UDTextbox -Id 'demoSearchInput' -Placeholder 'Search...'
+                New-UDButton -Text 'Go' -Variant contained -OnClick {
+                    $term = (Get-UDElement -Id 'demoSearchInput').value
+                    Show-UDToast -Message "Searching for: $term"
+                }
+            }
+        }
+
+        New-UDCard -Title 'Radio Group (fieldset + group role)' -Style @{ borderRadius = '8px'; border = '1px solid #e0e0e0'; boxShadow = 'none'; flex = '1' } -Content {
+            New-UDA11yWrapper -Tag 'fieldset' -Role 'group' -AriaLabel 'Notification frequency' `
+                -Style @{ border = '1px solid #e0e0e0'; borderRadius = '8px'; padding = '12px' } -Content {
+                New-UDRadioGroup -Id 'demoFreqGroup' -Label 'Frequency' -OnChange { } -Content {
+                    New-UDRadio -Value 'daily' -Label 'Daily'
+                    New-UDRadio -Value 'weekly' -Label 'Weekly'
+                    New-UDRadio -Value 'never' -Label 'Never'
+                }
+            }
+        }
+    }
+
+    New-UDA11yWrapper -AriaLabel 'Running processes' -Style @{ marginTop = '16px' } -Content {
+        $columns = @(
+            New-UDTableColumn -Property 'Name' -Title 'Name' -ShowSort
+            New-UDTableColumn -Property 'CPU' -Title 'CPU (s)' -ShowSort -Render { '{0:N2}' -f [double]$EventData.CPU }
+            New-UDTableColumn -Property 'Id' -Title 'PID'
+        )
+        New-UDTable -Data (Get-Process | Sort-Object CPU -Descending | Select-Object -First 10 Name, CPU, Id) `
+            -Columns $columns -ShowSearch -ShowPagination -PageSize 5
+    }
+
+    New-UDButton -Text '</> View Code' -Variant outlined -Size small -Style @{
+        borderRadius = '999px'; fontSize = '0.75rem'; textTransform = 'none'; marginTop = '12px'
+    } -OnClick {
+        Show-UDModal -MaxWidth 'md' -FullWidth -Header {
+            New-UDTypography -Text 'New-UDA11yWrapper — Sample Code' -Variant 'h6'
+        } -Content {
+            New-UDCodeEditor -Language 'powershell' -ReadOnly -Height '380px' -Code @'
+# Label a composite search region
+New-UDA11yWrapper -AriaLabel 'Site search' -Style @{ display = 'flex'; gap = '8px' } -Content {
+    New-UDTextbox -Id 'searchInput' -Placeholder 'Search...'
+    New-UDButton -Text 'Go' -Variant contained -OnClick {
+        Show-UDToast -Message (Get-UDElement -Id 'searchInput').value
+    }
+}
+
+# Label a radio group using semantic fieldset + ARIA group role
+New-UDA11yWrapper -Tag 'fieldset' -Role 'group' -AriaLabel 'Notification frequency' -Content {
+    New-UDRadioGroup -Id 'freqGroup' -Label 'Frequency' -OnChange { } -Content {
+        New-UDRadio -Value 'daily' -Label 'Daily'
+        New-UDRadio -Value 'weekly' -Label 'Weekly'
+        New-UDRadio -Value 'never' -Label 'Never'
+    }
+}
+
+# Label a table region
+New-UDA11yWrapper -AriaLabel 'Running processes' -Content {
+    New-UDTable -Data (Get-Process | Select-Object -First 10 Name, CPU, Id) -Columns $columns
+}
+'@
+        } -Footer {
+            New-UDButton -Text 'Close' -OnClick { Hide-UDModal }
+        }
+    }
 }
